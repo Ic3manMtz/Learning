@@ -1,11 +1,19 @@
-struct Cli{
+use std::path::PathBuf;
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
     pattern: String, 
-    path: std::path::Pathbuf,
+    path: PathBuf,
 }
 
 fn main() {
-    let pattern = std::env::args().nth(1).expect("No pattern given");
-    let path = std::env::args().nth(2).expect("No path given");
+    let args = Cli::parse();
+    let content = std::fs::read_to_string(&args.path).expect("Could not read file");
 
-    println!("Pattern: {:?}, path: {:?}", pattern, path)
+    for line in content.lines(){
+        if line.contains(&args.pattern){
+            println!("{}", line);
+        }
+    }
 }
